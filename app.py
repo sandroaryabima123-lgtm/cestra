@@ -7,17 +7,18 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-# Buat session khusus agar lebih stabil
-session = new_session("u2netp") # Versi 'u2netp' lebih ringan dari default
+# Gunakan model u2netp (versi ringan/pocket) agar tidak membebani server gratis
+model_name = "u2netp" 
+session = new_session(model_name)
 
 @app.route('/remove-bg', methods=['POST'])
 def remove_bg():
     if 'image_file' not in request.files:
-        return "No file", 400
+        return "No file uploaded", 400
     
     file = request.files['image_file'].read()
     
-    # Proses hapus background dengan session ringan
+    # Proses hapus background menggunakan session yang sudah disiapkan
     output = remove(file, session=session)
     
     return send_file(io.BytesIO(output), mimetype='image/png')
